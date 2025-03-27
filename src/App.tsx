@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Tabs } from 'flowbite-react';
+import { TabItem, Tabs } from 'flowbite-react';
 
 
 // import './App.css'
@@ -27,8 +27,7 @@ import {
 
   SYS_HIGHEST_TEMPERATURE, 
   SYS_LOWEST_TEMPERATURE, 
-  SYS_POWER_CONSUMPTION,
-  SYS_CLI_PASSWORD, 
+  SYS_POWER_CONSUMPTION, 
   
   CORE_MONITORING_PERIOD, 
   CORE_STATUS_PERIOD, 
@@ -44,6 +43,7 @@ import {
   CORE_BUZZER_MAP, 
   CORE_ALMANAC_VALIDITY, 
   CORE_ALMANAC_OUTDATED_RATIO, 
+  SYS_CLI_PASSWORD, 
 
   GEOLOC_MOTION_PERIOD, 
   GEOLOC_STATIC_PERIOD, 
@@ -207,7 +207,7 @@ function App() {
           <div className="dark:bg-black">
 
           <Tabs aria-label="Full width tabs" variant="default" className="p-1">
-            <Tabs.Item title="System">
+            <TabItem title="System">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 System Parameters
@@ -217,7 +217,7 @@ function App() {
 
                 <div className="col-span-full">
                   <p>
-                    System parameter are not exported from Abeeway devices by the Beehive tool and usually not added to the configuration file by Beequeen either.
+                    System parameters used for internal telemetry and not exported from Abeeway devices by the Beehive tool and usually not added to the configuration file by Beequeen either.
                   </p>
                   <p>
                     However, there are special cases when you may want to reset the values of these parameters by writing them out into a configuration file and import them into a device.
@@ -227,30 +227,14 @@ function App() {
                   </p>
                 </div>
 
-                <h3 className="col-span-full text-lg font-bold text-cyan-600">
-                  System monitoring parameters
-                </h3>
-
-                <div className="col-span-full">
-                  <p>
-                    These parameters are used for internal telemetry and not touched by Beehive/Beequeen unless you click on the checkboxes below.
-                  </p>
-                </div>
-
                 <OptionalParamI32 param_const={SYS_HIGHEST_TEMPERATURE} params_ref={params_ref} dummy_state={dummy_state}/> 
                 <OptionalParamI32 param_const={SYS_LOWEST_TEMPERATURE} params_ref={params_ref} dummy_state={dummy_state}/> 
                 <OptionalParamI32 param_const={SYS_POWER_CONSUMPTION} params_ref={params_ref} dummy_state={dummy_state}/>
+              
               </div>
 
-              <div className="m-7 grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-                <h3 className="col-span-full text-lg font-bold text-cyan-600">
-                  Other system parameters
-                </h3>
-                <OptionalParamI32 param_const={SYS_CLI_PASSWORD} params_ref={params_ref} dummy_state={dummy_state}/>
-              </div>
-
-            </Tabs.Item>
-            <Tabs.Item active title="Core">
+            </TabItem>
+            <TabItem active title="Core">
               
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 Core Parameters
@@ -297,12 +281,18 @@ function App() {
                 <div className="col-span-1 row-span-2 border border-solid rounded-lg p-3 shadow-md grid gap-3">
                   <ParamI32 param_const={CORE_ALMANAC_VALIDITY} params_ref={params_ref} defpar_ref={defpar_ref} dummy_state={dummy_state}/> 
                   <ParamI32 param_const={CORE_ALMANAC_OUTDATED_RATIO} params_ref={params_ref} defpar_ref={defpar_ref} dummy_state={dummy_state}/> 
-                </div> 
+                </div>
+
+                <div className="col-span-2 row-span-2 border border-solid rounded-lg p-3 shadow-md grid gap-3">
+                  <h6 className="text-sm font-bold">CLI Password</h6>
+                  <p>This value is not written into the config file unless the checkbox before the parameter name is checked!</p>
+                  <OptionalParamI32 param_const={SYS_CLI_PASSWORD} params_ref={params_ref} dummy_state={dummy_state}/>
+                </div>
               
               </div>
 
-            </Tabs.Item>
-            <Tabs.Item title="Geoloc">
+            </TabItem>
+            <TabItem title="Geoloc">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 Geolocation Parameters
@@ -345,8 +335,8 @@ function App() {
 
               </div>
 
-            </Tabs.Item>
-            <Tabs.Item title="GNSS">
+            </TabItem>
+            <TabItem title="GNSS">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 GNSS Parameters
@@ -378,8 +368,8 @@ function App() {
 
               </div>
 
-            </Tabs.Item>
-            <Tabs.Item title="LR11xx">
+            </TabItem>
+            <TabItem title="LR11xx">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 LR11xx Parameters
@@ -407,8 +397,8 @@ function App() {
 
               </div>
 
-            </Tabs.Item>
-            <Tabs.Item title="BLE Scan">
+            </TabItem>
+            <TabItem title="BLE Scan">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 BLE Scan Parameters
@@ -476,8 +466,8 @@ function App() {
 
               </div>
 
-            </Tabs.Item>
-            <Tabs.Item title="Accelero">
+            </TabItem>
+            <TabItem title="Accelero">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 Accelerometer Parameters
@@ -493,8 +483,8 @@ function App() {
 
               </div>
 
-            </Tabs.Item>
-            <Tabs.Item title="Network">
+            </TabItem>
+            <TabItem title="Network">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 Generic Network Parameters
@@ -508,8 +498,8 @@ function App() {
 
               </div>
 
-            </Tabs.Item>
-            <Tabs.Item title="LoRaWAN">
+            </TabItem>
+            <TabItem title="LoRaWAN">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 LoRaWAN Network Parameters
@@ -539,8 +529,8 @@ function App() {
 
               </div>
 
-            </Tabs.Item>
-            <Tabs.Item title="Cellular">
+            </TabItem>
+            <TabItem title="Cellular">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 Cellular Network Parameters
@@ -578,8 +568,8 @@ function App() {
 
               </div>
 
-            </Tabs.Item>
-            <Tabs.Item title="BLE Conn">
+            </TabItem>
+            <TabItem title="BLE Conn">
 
               <h2 className="ml-7 text-2xl font-bold text-cyan-600">
                 BLE Connection and Beaconing Parameters
@@ -609,7 +599,7 @@ function App() {
 
               </div>
 
-            </Tabs.Item>
+            </TabItem>
           </Tabs>
           </div>
 

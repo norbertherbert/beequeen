@@ -4,7 +4,6 @@ export const PARAMS_AT3_INDEX: [string, number, string][] = [
     ["sys_highest_temperature", 0x0000, "i32"], 
     ["sys_lowest_temperature", 0x0001, "i32"], 
     ["sys_power_consumption", 0x0002, "i32"],
-    ["sys_cli_password", 0x0003, "i32"], 
 
     ["core_monitoring_period", 0x0100, "i32"], 
     ["core_status_period", 0x0101, "i32"], 
@@ -19,7 +18,8 @@ export const PARAMS_AT3_INDEX: [string, number, string][] = [
     ["core_led1_map", 0x010a, "array"], 
     ["core_buzzer_map", 0x010b, "array"], 
     ["core_almanac_validity", 0x010c, "i32"], 
-    ["core_almanac_outdated_ratio", 0x010d, "i32"], 
+    ["core_almanac_outdated_ratio", 0x010d, "i32"],
+    ["sys_cli_password", 0x010e, "i32"], 
 
     ["geoloc_motion_period", 0x0200, "i32"], 
     ["geoloc_static_period", 0x0201, "i32"], 
@@ -1518,7 +1518,7 @@ export const SYS_POWER_CONSUMPTION: Optionally_saved_param_i32 = {
 }
 
 export const SYS_CLI_PASSWORD: Optionally_saved_param_i32 = { 
-    id: 0x0003, 
+    id: 0x010e, 
     name: 'sys_cli_password',
     title: 'CLI password',
     desc: 'CLI password',
@@ -3619,7 +3619,6 @@ export const PARAMS_AT3: Param_type[] = [
     SYS_HIGHEST_TEMPERATURE, 
     SYS_LOWEST_TEMPERATURE, 
     SYS_POWER_CONSUMPTION,
-    SYS_CLI_PASSWORD, 
 
     CORE_MONITORING_PERIOD, 
     CORE_STATUS_PERIOD, 
@@ -3634,7 +3633,8 @@ export const PARAMS_AT3: Param_type[] = [
     CORE_LED1_MAP, 
     CORE_BUZZER_MAP, 
     CORE_ALMANAC_VALIDITY, 
-    CORE_ALMANAC_OUTDATED_RATIO, 
+    CORE_ALMANAC_OUTDATED_RATIO,
+    SYS_CLI_PASSWORD, 
 
     GEOLOC_MOTION_PERIOD, 
     GEOLOC_STATIC_PERIOD, 
