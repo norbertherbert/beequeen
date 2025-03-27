@@ -128,7 +128,7 @@ export function ParamCellSearchBands({param_const, params_ref, defpar_ref, dummy
 
       <div className="flex justify-start items-center">
 
-        <Label htmlFor={param_const.name} value={param_const.title} />
+        <Label htmlFor={param_const.name} >{param_const.title}</Label>
 
         <Tooltip content={ `${param_const.desc}` }>
           <DefaultIndicator is_default={is_default} />
