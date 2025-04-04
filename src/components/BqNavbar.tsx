@@ -1,6 +1,6 @@
 import { useState } from "react";
-import beequeen_logo from "../assets/beequeen.png";
-import beehive_logo from "../assets/beehive.png";
+import beequeen_icon from "../assets/beequeen.png";
+import beehive_icon from "../assets/beehive.png";
 import {
   Navbar,
   NavbarBrand,
@@ -127,9 +127,9 @@ export function BqNavbar({
             target="_blank"
           >
             <img
-              src={beequeen_logo}
+              src={beequeen_icon}
               className="logo mr-3 h-8 sm:h-12"
-              alt="Flowbite React Logo"
+              alt="Beequeen Icon"
             />
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
               Beequeen - AT3
@@ -336,8 +336,9 @@ export function BqNavbar({
               onClick={open_beehive_tab_if_not_opened}
             >
               <img
-                src={beehive_logo}
+                src={beehive_icon}
                 className="logo inline-block h-6 pr-1 pb-1"
+                alt="Beehive Icon"
               />
               Beehive
             </NavbarLink>
