@@ -4,17 +4,22 @@ Abeeway AT3 Configuration Editor tool
 
 Works with Chrome-based browsers only. It utilizes Chrome's experimental Web Bluetooth API.
 
-## Build
+## Install
 
-``` bash
+```bash
 git clone https://github.com/norbertherbert/beequeen.git
 cd beequeen
 npm install
+```
+
+## Build
+
+```bash
 npm run build
 ```
 
 ## Try out loccally
 
-``` bash
+```bash
 npm run dev
 ```
