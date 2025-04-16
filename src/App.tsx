@@ -40,7 +40,7 @@ import {
   CORE_BUZZER_MAP,
   CORE_ALMANAC_VALIDITY,
   CORE_ALMANAC_OUTDATED_RATIO,
-  SYS_CLI_PASSWORD,
+  CORE_CLI_PASSWORD,
   GEOLOC_MOTION_PERIOD,
   GEOLOC_STATIC_PERIOD,
   GEOLOC_SOS_PERIOD,
@@ -126,7 +126,7 @@ import {
   CELL_SEARCH_BANDS,
   CELL_CNX_TIMEOUT_STATIC,
   CELL_CNX_TIMEOUT_MOTION,
-  CELL_NW_LOST_TIMEOUT,
+  CELL_CNX_NW_RECONNECT_TIMEOUT,
   CELL_CNX_MAX_ATTEMPTS,
   CELL_ACCESS_POINT_NAME,
   CELL_OPERATOR_SIM_SLOT_0,
@@ -358,7 +358,7 @@ function App() {
                       checkbox before the parameter name is checked!
                     </p>
                     <OptionalParamI32
-                      param_const={SYS_CLI_PASSWORD}
+                      param_const={CORE_CLI_PASSWORD}
                       params_ref={params_ref}
                       dummy_state={dummy_state}
                     />
@@ -1032,7 +1032,7 @@ function App() {
                     dummy_state={dummy_state}
                   />
                   <ParamI32
-                    param_const={CELL_NW_LOST_TIMEOUT}
+                    param_const={CELL_CNX_NW_RECONNECT_TIMEOUT}
                     params_ref={params_ref}
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}

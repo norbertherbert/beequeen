@@ -17,11 +17,11 @@ export async function open_template_config_file(): Promise<
   limited_default_conf_params.sys_highest_temperature = null;
   limited_default_conf_params.sys_lowest_temperature = null;
   limited_default_conf_params.sys_power_consumption = null;
-  limited_default_conf_params.sys_cli_password = null;
+  limited_default_conf_params.core_cli_password = null;
   // delete limited_default_conf_params.sys_highest_temperature;
   // delete limited_default_conf_params.sys_lowest_temperature;
   // delete limited_default_conf_params.sys_power_consumption;
-  // delete limited_default_conf_params.sys_cli_password;
+  // delete limited_default_conf_params.core_cli_password;
 
   return limited_default_conf_params;
 }
@@ -124,11 +124,11 @@ export async function open_config_file(): Promise<{
   limited_default_conf_params.sys_highest_temperature = null;
   limited_default_conf_params.sys_lowest_temperature = null;
   limited_default_conf_params.sys_power_consumption = null;
-  limited_default_conf_params.sys_cli_password = null;
+  limited_default_conf_params.core_cli_password = null;
   // delete limited_default_conf_params.sys_highest_temperature;
   // delete limited_default_conf_params.sys_lowest_temperature;
   // delete limited_default_conf_params.sys_power_consumption;
-  // delete limited_default_conf_params.sys_cli_password;
+  // delete limited_default_conf_params.core_cli_password;
 
   return {
     file_name: file.name,
@@ -145,7 +145,8 @@ export async function save_config_file(
   if (deltaConfig) {
     cfg_file_entries = cfg_file_entries.filter(
       ([key, val]: [string, string | null]) =>
-        default_conf_params[key]?.toString().toLowerCase() !== val,
+        default_conf_params[key]?.toString().toLowerCase() !==
+        val?.toLowerCase(),
     );
   }
 
@@ -226,7 +227,8 @@ export async function export_as_production_config_file(
   if (deltaConfig) {
     cfg_file_entries = cfg_file_entries.filter(
       ([key, val]: [string, string | null]) =>
-        default_conf_params[key]?.toString().toLowerCase() !== val,
+        default_conf_params[key]?.toString().toLowerCase() !==
+        val?.toLowerCase(),
     );
   }
 

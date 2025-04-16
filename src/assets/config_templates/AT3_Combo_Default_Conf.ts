@@ -16,7 +16,7 @@ core_led1_map = "{00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
 core_buzzer_map = "{09,03,24,09,01,25,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00}"
 core_almanac_validity = 120
 core_almanac_outdated_ratio = 100
-sys_cli_password = 123
+core_cli_password = 123
 geoloc_motion_period = 300
 geoloc_static_period = 3600
 geoloc_sos_period = 60
@@ -102,7 +102,7 @@ cell_network_type = 1
 cell_search_bands = "{01,03,08,13,14,1C,00,00,00,00,00,00,00,00,00,00,00,00,00}"
 cell_cnx_timeout_static = 180
 cell_cnx_timeout_motion = 300
-cell_nw_lost_timeout = 60
+cell_cnx_nw_reconnect_timeout = 60
 cell_cnx_max_attempts = 3
 cell_access_point_name = ""
 cell_operator_sim_slot_0 = ""
@@ -128,4 +128,4 @@ ble_beacon_type = 0
 ble_beacon_identifier = "{00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00}"
 ble_beacon_fast_adv_interval = 333
 ble_beacon_slow_adv_interval = 1000
-`
+`;
