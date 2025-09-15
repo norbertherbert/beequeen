@@ -2,23 +2,23 @@ import { useState, useRef, useEffect } from "react";
 import { Label, Tooltip, Checkbox } from "flowbite-react";
 import { ParamCodes } from "./ParamCodes.tsx";
 import {
-  Param_core_notif_XXX,
+  Param_core_db_type_mask,
   NOTIFICATIONS,
-  Notif_bitmap_gui_val,
+  Core_db_type_mask_gui_val,
   c_string_to_bytes,
   bytes_to_c_string,
-  encode_notif_bitmap,
-  decode_notif_bitmap,
+  encode_db_type_mask_bitmap,
+  decode_db_type_mask_bitmap,
 } from "../abw/params_at3";
 import { DefaultIndicator } from "./DefaultIndicator.tsx";
 
-export function ParamCoreNotifXxx({
+export function ParamDbTypeMask({
   param_const,
   params_ref,
   defpar_ref,
   dummy_state,
 }: {
-  param_const: Param_core_notif_XXX;
+  param_const: Param_core_db_type_mask;
   params_ref: React.RefObject<Record<string, string | null>>;
   defpar_ref: React.RefObject<Record<string, string | null> | undefined>;
   dummy_state: number;
@@ -26,7 +26,7 @@ export function ParamCoreNotifXxx({
   const param_str = useRef("");
   const err_str = useRef("");
 
-  function calculate_initial_state(): Notif_bitmap_gui_val {
+  function calculate_initial_state(): Core_db_type_mask_gui_val {
     const par = params_ref.current[param_const.name];
     if (par === undefined || par === null) {
       return param_const.default_val;
@@ -34,11 +34,15 @@ export function ParamCoreNotifXxx({
       try {
         err_str.current = "";
         param_str.current = par;
-        return decode_notif_bitmap(c_string_to_bytes(par, param_const.len));
+        return decode_db_type_mask_bitmap(
+          c_string_to_bytes(par, param_const.len),
+        );
       } catch (err) {
         err_str.current = (err as Error).message;
         param_str.current = par;
         return {
+          non_notif_uplinks: false,
+
           sys_status: false,
           sys_low_battery: false,
           sys_ble: false,
@@ -71,7 +75,7 @@ export function ParamCoreNotifXxx({
     }
   }
 
-  const [state, set_state] = useState<Notif_bitmap_gui_val | undefined>();
+  const [state, set_state] = useState<Core_db_type_mask_gui_val | undefined>();
 
   useEffect(
     () => {
@@ -96,7 +100,7 @@ export function ParamCoreNotifXxx({
         [e.target.name]: e.target.checked,
       };
 
-      const param_bytes = encode_notif_bitmap(new_state);
+      const param_bytes = encode_db_type_mask_bitmap(new_state);
 
       param_str.current = bytes_to_c_string(param_bytes, param_const.len);
       err_str.current = "";
@@ -130,6 +134,7 @@ export function ParamCoreNotifXxx({
       defpar = x;
     }
   }
+
   const is_default = param_str.current.toLowerCase() === defpar.toLowerCase();
 
   return (
@@ -141,13 +146,34 @@ export function ParamCoreNotifXxx({
           <DefaultIndicator is_default={is_default} />
         </Tooltip>
       </div>
-
       <ParamCodes
         param_ids={param_ids}
         encoded_param_values={encoded_param_values}
         downlink_payload={downlink_payload}
         is_error={err_str.current !== ""}
       />
+
+      <div className="mt-2 mb-3 grid grid-cols-1 gap-3">
+        <div className="flex items-center gap-1">
+          <Checkbox
+            id={param_const.name + "_" + "non_notif_uplinks"}
+            name={"non_notif_uplinks"}
+            checked={
+              (state as unknown as Record<string, boolean>)["non_notif_uplinks"]
+            }
+            onChange={handle_checkbox_change}
+          />
+
+          <Label
+            htmlFor={param_const.name + "_" + "non_notif_uplinks"}
+            className="flex"
+          >
+            Regular uplink messages
+          </Label>
+        </div>
+      </div>
+
+      <Label>Notification messages</Label>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
@@ -196,7 +222,6 @@ export function ParamCoreNotifXxx({
             })}
         </div>
       </div>
-
       {err_str.current !== "" ? (
         <div className="text-sm text-red-500">{err_str.current}</div>
       ) : (

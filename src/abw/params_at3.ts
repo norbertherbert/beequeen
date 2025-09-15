@@ -18,6 +18,7 @@ export const PARAMS_AT3_INDEX: [string, number, string][] = [
   ["core_almanac_validity", 0x010c, "i32"],
   ["core_almanac_outdated_ratio", 0x010d, "i32"],
   ["core_cli_password", 0x010e, "i32"],
+  ["core_db_type_mask", 0x010f, "array"],
 
   ["geoloc_motion_period", 0x0200, "i32"],
   ["geoloc_static_period", 0x0201, "i32"],
@@ -94,18 +95,22 @@ export const PARAMS_AT3_INDEX: [string, number, string][] = [
   ["accelero_shock_threshold", 0x0704, "i32"],
 
   ["net_selection", 0x0800, "i32"],
-  ["net_reconnection_spacing", 0x0801, "i32"],
-  ["net_main_probe_timeout", 0x0802, "i32"],
+  ["net_reconnection_spacing_static", 0x0801, "i32"],
+  ["net_main_probe_timeout_static", 0x0802, "i32"],
+  ["net_reconnection_spacing_motion", 0x0803, "i32"],
+  ["net_main_probe_timeout_motion", 0x0804, "i32"],
 
   ["lorawan_cnx_timeout", 0x0900, "i32"],
-  ["lorawan_dl_trigger_period", 0x0901, "i32"],
-  ["lorawan_probe_max_attempts", 0x0902, "i32"],
-  ["lorawan_probe_period", 0x0903, "i32"],
+  ["lorawan_heartbeat_period", 0x0901, "i32"],
+  ["lorawan_probe_max_attempts_static", 0x0902, "i32"],
+  ["lorawan_probe_period_static", 0x0903, "i32"],
   ["lorawan_confirm_notif_map", 0x0904, "array"],
   ["lorawan_confirm_notif_retry", 0x0905, "i32"],
   ["lorawan_s1_tx_strategy", 0x0906, "i32"],
   ["lorawan_s1_ul_port", 0x0907, "i32"],
   ["lorawan_s1_dl_port", 0x0908, "i32"],
+  ["lorawan_probe_period_motion", 0x0909, "i32"],
+  ["lorawan_probe_max_attempts_motion", 0x090a, "i32"],
 
   ["cell_sim_interface", 0x0a00, "i32"],
   ["cell_network_type", 0x0a01, "i32"],
@@ -130,6 +135,9 @@ export const PARAMS_AT3_INDEX: [string, number, string][] = [
   ["cell_s1_dst_ip_port", 0x0a14, "i32"],
   ["cell_s1_src_ip_port", 0x0a15, "i32"],
   ["cell_s1_tx_aggr_time", 0x0a16, "i32"],
+  ["cell_apn_user_id", 0x0a17, "string"],
+  ["cell_apn_user_pwd", 0x0a18, "string"],
+  ["cell_apn_auth_protocol", 0x0a19, "i32"],
 
   ["ble_cnx_tx_power", 0x0b00, "i32"],
   ["ble_cnx_adv_duration", 0x0b01, "i32"],
@@ -222,6 +230,11 @@ export interface Param_core_buzzer_map extends Param {
   default_val: Buzzer_map_gui_val_item[];
 }
 
+export interface Param_core_db_type_mask extends Param {
+  len: number;
+  default_val: Core_db_type_mask_gui_val;
+}
+
 export interface Param_geoloc_profileX_triggers extends Param {
   default_val: Geoloc_profile_triggers_gui_val;
 }
@@ -268,6 +281,8 @@ export interface Notif_bitmap_gui_val {
   sys_ble: boolean;
   sys_tamper: boolean;
   sys_heartbeat: boolean;
+  sys_shutdown: boolean;
+  sys_data_buffering: boolean;
 
   sos_on: boolean;
   sos_off: boolean;
@@ -288,6 +303,10 @@ export interface Notif_bitmap_gui_val {
   geozone_in_hazard: boolean;
   geozone_out_hazard: boolean;
   geozone_meeting_point: boolean;
+}
+
+export interface Core_db_type_mask_gui_val extends Notif_bitmap_gui_val {
+  non_notif_uplinks: boolean;
 }
 
 export interface Button_map_gui_val {
@@ -458,6 +477,8 @@ export const NOTIFICATIONS: Option_ids = {
   sys_ble: { id: 0x0002, desc: "BLE securely connected" },
   sys_tamper: { id: 0x0003, desc: "Tamper detection" },
   sys_heartbeat: { id: 0x0004, desc: "Heartbeat message" },
+  sys_shutdown: { id: 0x0004, desc: "Shutdown" },
+  sys_data_buffering: { id: 0x0004, desc: "Data buffering" },
 
   sos_on: { id: 0x0100, desc: "SOS activated" },
   sos_off: { id: 0x0101, desc: "SOS deactivated" },
@@ -949,6 +970,8 @@ export function encode_notif_bitmap(gui_val: Notif_bitmap_gui_val): number[] {
   param_val[0] |= gui_val.sys_ble ? 1 << 2 : 0;
   param_val[0] |= gui_val.sys_tamper ? 1 << 3 : 0;
   param_val[0] |= gui_val.sys_heartbeat ? 1 << 4 : 0;
+  param_val[0] |= gui_val.sys_shutdown ? 1 << 5 : 0;
+  param_val[0] |= gui_val.sys_data_buffering ? 1 << 6 : 0;
 
   param_val[1] |= gui_val.sos_on ? 1 << 0 : 0;
   param_val[1] |= gui_val.sos_off ? 1 << 1 : 0;
@@ -973,6 +996,44 @@ export function encode_notif_bitmap(gui_val: Notif_bitmap_gui_val): number[] {
   return param_val;
 }
 
+export function encode_db_type_mask_bitmap(
+  gui_val: Core_db_type_mask_gui_val,
+): number[] {
+  const param_val: number[] = [0, 0, 0, 0, 0, 0, 0];
+
+  param_val[0] |= gui_val.non_notif_uplinks ? 1 << 0 : 0;
+
+  param_val[1] |= gui_val.sys_status ? 1 << 0 : 0;
+  param_val[1] |= gui_val.sys_low_battery ? 1 << 1 : 0;
+  param_val[1] |= gui_val.sys_ble ? 1 << 2 : 0;
+  param_val[1] |= gui_val.sys_tamper ? 1 << 3 : 0;
+  param_val[1] |= gui_val.sys_heartbeat ? 1 << 4 : 0;
+  param_val[1] |= gui_val.sys_shutdown ? 1 << 5 : 0;
+  param_val[1] |= gui_val.sys_data_buffering ? 1 << 6 : 0;
+
+  param_val[2] |= gui_val.sos_on ? 1 << 0 : 0;
+  param_val[2] |= gui_val.sos_off ? 1 << 1 : 0;
+
+  param_val[3] |= gui_val.temp_high ? 1 << 0 : 0;
+  param_val[3] |= gui_val.temp_low ? 1 << 1 : 0;
+  param_val[3] |= gui_val.temp_normal ? 1 << 2 : 0;
+
+  param_val[4] |= gui_val.acc_motion_start ? 1 << 0 : 0;
+  param_val[4] |= gui_val.acc_motion_end ? 1 << 1 : 0;
+  param_val[4] |= gui_val.acc_shock ? 1 << 2 : 0;
+
+  param_val[5] |= gui_val.nwk_main_up ? 1 << 0 : 0;
+  param_val[5] |= gui_val.nwk_backup_up ? 1 << 1 : 0;
+
+  param_val[6] |= gui_val.geozone_entry ? 1 << 0 : 0;
+  param_val[6] |= gui_val.geozone_exit ? 1 << 1 : 0;
+  param_val[6] |= gui_val.geozone_in_hazard ? 1 << 2 : 0;
+  param_val[6] |= gui_val.geozone_out_hazard ? 1 << 3 : 0;
+  param_val[6] |= gui_val.geozone_meeting_point ? 1 << 4 : 0;
+
+  return param_val;
+}
+
 export function decode_notif_bitmap(param_val: number[]): Notif_bitmap_gui_val {
   const gui_val: Notif_bitmap_gui_val = {
     // sys_status: ( array[ NOTIFICATIONS.sys_status.id >>> 8 ] >>> (NOTIFICATIONS.sys_status.id & 0xff) ) & 1 == 1,
@@ -982,6 +1043,8 @@ export function decode_notif_bitmap(param_val: number[]): Notif_bitmap_gui_val {
     sys_ble: ((param_val[0] >>> 2) & 1) == 1,
     sys_tamper: ((param_val[0] >>> 3) & 1) == 1,
     sys_heartbeat: ((param_val[0] >>> 4) & 1) == 1,
+    sys_shutdown: ((param_val[0] >>> 5) & 1) == 1,
+    sys_data_buffering: ((param_val[0] >>> 6) & 1) == 1,
 
     sos_on: ((param_val[1] >>> 0) & 1) == 1,
     sos_off: ((param_val[1] >>> 1) & 1) == 1,
@@ -1002,6 +1065,17 @@ export function decode_notif_bitmap(param_val: number[]): Notif_bitmap_gui_val {
     geozone_in_hazard: ((param_val[5] >>> 2) & 1) == 1,
     geozone_out_hazard: ((param_val[5] >>> 3) & 1) == 1,
     geozone_meeting_point: ((param_val[5] >>> 4) & 1) == 1,
+  };
+
+  return gui_val;
+}
+
+export function decode_db_type_mask_bitmap(
+  param_val: number[],
+): Core_db_type_mask_gui_val {
+  const gui_val: Core_db_type_mask_gui_val = {
+    non_notif_uplinks: ((param_val[0] >>> 0) & 1) == 1,
+    ...decode_notif_bitmap(param_val.slice(1)),
   };
 
   return gui_val;
@@ -1647,6 +1721,8 @@ export const CORE_NOTIF_ENABLE: Param_core_notif_XXX = {
     sys_ble: false,
     sys_tamper: true,
     sys_heartbeat: true,
+    sys_shutdown: true,
+    sys_data_buffering: false,
 
     sos_on: false,
     sos_off: false,
@@ -1987,6 +2063,46 @@ export const CORE_ALMANAC_OUTDATED_RATIO: Param_i32 = {
   max_val: 100,
   default_val: 100,
   unit: "%",
+};
+
+export const CORE_DB_TYPE_MASK: Param_core_db_type_mask = {
+  id: 0x010f,
+  name: "core_db_type_mask",
+  title: "Buffered uplink messages",
+  desc: "Uplink message types that are stored in a buffer to allow resend requests.",
+  type: "bytearray_bitmap",
+  len: 7,
+  default_val: {
+    non_notif_uplinks: false,
+
+    sys_status: false,
+    sys_low_battery: false,
+    sys_ble: false,
+    sys_tamper: false,
+    sys_heartbeat: false,
+    sys_shutdown: false,
+    sys_data_buffering: false,
+
+    sos_on: false,
+    sos_off: false,
+
+    temp_high: false,
+    temp_low: false,
+    temp_normal: false,
+
+    acc_motion_start: false,
+    acc_motion_end: false,
+    acc_shock: false,
+
+    nwk_main_up: false,
+    nwk_backup_up: false,
+
+    geozone_entry: false,
+    geozone_exit: false,
+    geozone_in_hazard: false,
+    geozone_out_hazard: false,
+    geozone_meeting_point: false,
+  },
 };
 
 // -------------------------------------------------------
@@ -3017,10 +3133,10 @@ export const NET_SELECTION: Param_options = {
   default_val: 0,
 };
 
-export const NET_RECONNECTION_SPACING: Param_i32 = {
+export const NET_RECONNECTION_SPACING_STATIC: Param_i32 = {
   id: 0x0801,
-  name: "net_reconnection_spacing",
-  title: "Reconnect period",
+  name: "net_reconnection_spacing_static",
+  title: "Reconnect period - Static",
   desc: `- When both primary and backup networks are down: This is the interval between connection retry attempts.
 - In case of "LoRAWAN Only" operation: This is the interval between the a Join fail or network down detection and a new Join attempt.
 - In case of "Cellular Only" operation: This is the interval between an attach fail or the network down detection and the reconnection.`,
@@ -3031,10 +3147,37 @@ export const NET_RECONNECTION_SPACING: Param_i32 = {
   unit: "s",
 };
 
-export const NET_MAIN_PROBE_TIMEOUT: Param_i32 = {
+export const NET_MAIN_PROBE_TIMEOUT_STATIC: Param_i32 = {
   id: 0x0802,
-  name: "net_main_probe_timeout",
-  title: "Reconnect timeout",
+  name: "net_main_probe_timeout_static",
+  title: "Reconnect timeout - Static",
+  desc: `The interval between connection retry attempts to the primary network when operating on the backup network. 
+  Parameter available only for the Combo Compact Tracker`,
+  type: "i32",
+  min_val: 120,
+  max_val: 2147483647,
+  default_val: 600,
+  unit: "s",
+};
+
+export const NET_RECONNECTION_SPACING_MOTION: Param_i32 = {
+  id: 0x0803,
+  name: "net_reconnection_spacing_motion",
+  title: "Reconnect period - Motion",
+  desc: `- When both primary and backup networks are down: This is the interval between connection retry attempts.
+- In case of "LoRAWAN Only" operation: This is the interval between the a Join fail or network down detection and a new Join attempt.
+- In case of "Cellular Only" operation: This is the interval between an attach fail or the network down detection and the reconnection.`,
+  type: "i32",
+  min_val: 0,
+  max_val: 2147483647,
+  default_val: 600,
+  unit: "s",
+};
+
+export const NET_MAIN_PROBE_TIMEOUT_MOTION: Param_i32 = {
+  id: 0x0804,
+  name: "net_main_probe_timeout_motion",
+  title: "Reconnect timeout - Motion",
   desc: `The interval between connection retry attempts to the primary network when operating on the backup network. 
   Parameter available only for the Combo Compact Tracker`,
   type: "i32",
@@ -3060,11 +3203,11 @@ export const LORAWAN_CNX_TIMEOUT: Param_i32 = {
   unit: "s",
 };
 
-export const LORAWAN_DL_TRIGGER_PERIOD: Param_i32 = {
+export const LORAWAN_HEARTBEAT_PERIOD: Param_i32 = {
   id: 0x0901,
-  name: "lorawan_dl_trigger_period",
-  title: "Downlink RX window trigger period",
-  desc: "Period at which an empty uplink is sent to trigger an Rx window for downlinks (if no uplink has been sent within this period)",
+  name: "lorawan_heartbeat_period",
+  title: "Heartbeat period",
+  desc: "LoRaWAN heartbeat period",
   type: "i32",
   min_val: 0,
   max_val: 2147483647,
@@ -3072,10 +3215,10 @@ export const LORAWAN_DL_TRIGGER_PERIOD: Param_i32 = {
   unit: "s",
 };
 
-export const LORAWAN_PROBE_MAX_ATTEMPTS: Param_i32 = {
+export const LORAWAN_PROBE_MAX_ATTEMPTS_STATIC: Param_i32 = {
   id: 0x0902,
-  name: "lorawan_probe_max_attempts",
-  title: "Max number of LoRaWAN probes",
+  name: "lorawan_probe_max_attempts_static",
+  title: "Num. of link-checks - Static",
   desc: "Number of link-check requests sent before declaring the network as lost",
   type: "i32",
   min_val: 0,
@@ -3084,10 +3227,10 @@ export const LORAWAN_PROBE_MAX_ATTEMPTS: Param_i32 = {
   unit: "",
 };
 
-export const LORAWAN_PROBE_PERIOD: Param_i32 = {
+export const LORAWAN_PROBE_PERIOD_STATIC: Param_i32 = {
   id: 0x0903,
-  name: "lorawan_probe_period",
-  title: "LoRaWAN probe period",
+  name: "lorawan_probe_period_static",
+  title: "Link-check period - Static",
   desc: "Time between LoRaWAN link-check requests",
   type: "i32",
   min_val: 120,
@@ -3110,6 +3253,8 @@ export const LORAWAN_CONFIRM_NOTIF_MAP: Param_core_notif_XXX = {
     sys_ble: false,
     sys_tamper: false,
     sys_heartbeat: false,
+    sys_shutdown: false,
+    sys_data_buffering: false,
 
     sos_on: false,
     sos_off: false,
@@ -3203,6 +3348,30 @@ export const LORAWAN_S1_DL_PORT: Param_i32 = {
   min_val: 1,
   max_val: 252,
   default_val: 3,
+  unit: "",
+};
+
+export const LORAWAN_PROBE_PERIOD_MOTION: Param_i32 = {
+  id: 0x0909,
+  name: "lorawan_probe_period_motion",
+  title: "Link-check period - Motion",
+  desc: "Time between LoRaWAN link-check requests",
+  type: "i32",
+  min_val: 120,
+  max_val: 2147483647,
+  default_val: 43200,
+  unit: "s",
+};
+
+export const LORAWAN_PROBE_MAX_ATTEMPTS_MOTION: Param_i32 = {
+  id: 0x090a,
+  name: "lorawan_probe_max_attempts_motion",
+  title: "Num. of link-checks - Motion",
+  desc: "Number of link-check requests sent before declaring the network as lost",
+  type: "i32",
+  min_val: 0,
+  max_val: 10,
+  default_val: 4,
   unit: "",
 };
 
@@ -3426,7 +3595,7 @@ export const CELL_PROBE_PERIOD: Param_i32 = {
   type: "i32",
   min_val: 0,
   max_val: 2147483647,
-  default_val: 600,
+  default_val: 120,
   unit: "s",
 };
 
@@ -3486,6 +3655,49 @@ export const CELL_S1_TX_AGGR_TIME: Param_i32 = {
   max_val: 3600,
   default_val: 120,
   unit: "s",
+};
+
+export const CELL_APN_USER_ID: Param_string = {
+  id: 0x0a17,
+  name: "cell_apn_user_id",
+  title: "APN user name",
+  desc: "APN user name",
+  type: "string",
+  default_val: "",
+};
+
+export const CELL_APN_USER_PWD: Param_string = {
+  id: 0x0a18,
+  name: "cell_apn_user_pwd",
+  title: "APN password",
+  desc: "APN password",
+  type: "string",
+  default_val: "",
+};
+
+// export const CELL_APN_AUTH_PROTOCOL: Param_i32 = {
+//   id: 0x0a19,
+//   name: "cell_apn_auth_protocol",
+//   title: "Authentication protocol",
+//   desc: "Authentication protocol used for private APN connection: 1 - PAP, 2 - CHAP",
+//   type: "i32",
+//   min_val: 1,
+//   max_val: 2,
+//   default_val: 1,
+//   unit: "",
+// };
+
+export const CELL_APN_AUTH_PROTOCOL: Param_options = {
+  id: 0x0a19,
+  name: "cell_apn_auth_protocol",
+  title: "Authentication protocol",
+  desc: "Authentication protocol used for private APN connection: 1 - PAP, 2 - CHAP",
+  type: "options",
+  options: {
+    tcp: { desc: "PAP", val: 1 },
+    udp: { desc: "CHAP", val: 2 },
+  },
+  default_val: 1,
 };
 
 // -------------------------------------------------------
@@ -3705,6 +3917,7 @@ export const PARAMS_AT3: Param_type[] = [
   CORE_ALMANAC_VALIDITY,
   CORE_ALMANAC_OUTDATED_RATIO,
   CORE_CLI_PASSWORD,
+  CORE_DB_TYPE_MASK,
 
   GEOLOC_MOTION_PERIOD,
   GEOLOC_STATIC_PERIOD,
@@ -3781,18 +3994,22 @@ export const PARAMS_AT3: Param_type[] = [
   ACCELERO_SHOCK_THRESHOLD,
 
   NET_SELECTION,
-  NET_RECONNECTION_SPACING,
-  NET_MAIN_PROBE_TIMEOUT,
+  NET_RECONNECTION_SPACING_STATIC,
+  NET_MAIN_PROBE_TIMEOUT_STATIC,
+  NET_RECONNECTION_SPACING_MOTION,
+  NET_MAIN_PROBE_TIMEOUT_MOTION,
 
   LORAWAN_CNX_TIMEOUT,
-  LORAWAN_DL_TRIGGER_PERIOD,
-  LORAWAN_PROBE_MAX_ATTEMPTS,
-  LORAWAN_PROBE_PERIOD,
+  LORAWAN_HEARTBEAT_PERIOD,
+  LORAWAN_PROBE_MAX_ATTEMPTS_STATIC,
+  LORAWAN_PROBE_PERIOD_STATIC,
   LORAWAN_CONFIRM_NOTIF_MAP,
   LORAWAN_CONFIRM_NOTIF_RETRY,
   LORAWAN_S1_TX_STRATEGY,
   LORAWAN_S1_UL_PORT,
   LORAWAN_S1_DL_PORT,
+  LORAWAN_PROBE_PERIOD_MOTION,
+  LORAWAN_PROBE_MAX_ATTEMPTS_MOTION,
 
   CELL_SIM_INTERFACE,
   CELL_NETWORK_TYPE,
@@ -3817,6 +4034,9 @@ export const PARAMS_AT3: Param_type[] = [
   CELL_S1_DST_IP_PORT,
   CELL_S1_SRC_IP_PORT,
   CELL_S1_TX_AGGR_TIME,
+  CELL_APN_USER_ID,
+  CELL_APN_USER_PWD,
+  CELL_APN_AUTH_PROTOCOL,
 
   BLE_CNX_TX_POWER,
   BLE_CNX_ADV_DURATION,

@@ -19,6 +19,7 @@ import { PramLorawanS1TxStrategy } from "./components/PramLorawanS1TxStrategy";
 import { ParamString } from "./components/ParamString";
 import { ParamCellPsmTimeXXX } from "./components/ParamCellPsmTimeXXX";
 import { ParamCellSearchBands } from "./components/ParamCellSearchBands";
+import { ParamDbTypeMask } from "./components/ParamDbTypeMask";
 // Param_cell_psm_time_XXX
 // Param_cell_search_bands
 
@@ -41,6 +42,7 @@ import {
   CORE_ALMANAC_VALIDITY,
   CORE_ALMANAC_OUTDATED_RATIO,
   CORE_CLI_PASSWORD,
+  CORE_DB_TYPE_MASK,
   GEOLOC_MOTION_PERIOD,
   GEOLOC_STATIC_PERIOD,
   GEOLOC_SOS_PERIOD,
@@ -110,17 +112,21 @@ import {
   ACCELERO_OUTPUT_DATA_RATE,
   ACCELERO_SHOCK_THRESHOLD,
   NET_SELECTION,
-  NET_RECONNECTION_SPACING,
-  NET_MAIN_PROBE_TIMEOUT,
+  NET_RECONNECTION_SPACING_STATIC,
+  NET_MAIN_PROBE_TIMEOUT_STATIC,
+  NET_RECONNECTION_SPACING_MOTION,
+  NET_MAIN_PROBE_TIMEOUT_MOTION,
   LORAWAN_CNX_TIMEOUT,
-  LORAWAN_DL_TRIGGER_PERIOD,
-  LORAWAN_PROBE_MAX_ATTEMPTS,
-  LORAWAN_PROBE_PERIOD,
+  LORAWAN_HEARTBEAT_PERIOD,
+  LORAWAN_PROBE_MAX_ATTEMPTS_STATIC,
+  LORAWAN_PROBE_PERIOD_STATIC,
   LORAWAN_CONFIRM_NOTIF_MAP,
   LORAWAN_CONFIRM_NOTIF_RETRY,
   LORAWAN_S1_TX_STRATEGY,
   LORAWAN_S1_UL_PORT,
   LORAWAN_S1_DL_PORT,
+  LORAWAN_PROBE_PERIOD_MOTION,
+  LORAWAN_PROBE_MAX_ATTEMPTS_MOTION,
   CELL_SIM_INTERFACE,
   CELL_NETWORK_TYPE,
   CELL_SEARCH_BANDS,
@@ -144,6 +150,9 @@ import {
   CELL_S1_DST_IP_PORT,
   CELL_S1_SRC_IP_PORT,
   CELL_S1_TX_AGGR_TIME,
+  CELL_APN_USER_ID,
+  CELL_APN_USER_PWD,
+  CELL_APN_AUTH_PROTOCOL,
   BLE_CNX_TX_POWER,
   BLE_CNX_ADV_DURATION,
   BLE_CNX_BEHAVIOR,
@@ -162,6 +171,17 @@ function App() {
   const defpar_ref = useRef<Record<string, string | null> | undefined>(
     undefined,
   );
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      // Browsers ignore the string you pass, but you must set it
+      event.returnValue = ""; // <-- necessary even if marked deprecated
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -294,6 +314,15 @@ function App() {
                   <div className="col-span-2 row-span-2 grid gap-3 rounded-lg border border-solid border-gray-300 p-3 shadow-md">
                     <ParamCoreNotifXxx
                       param_const={CORE_NOTIF_ENABLE}
+                      params_ref={params_ref}
+                      defpar_ref={defpar_ref}
+                      dummy_state={dummy_state}
+                    />
+                  </div>
+
+                  <div className="col-span-2 row-span-2 grid gap-3 rounded-lg border border-solid border-gray-300 p-3 shadow-md">
+                    <ParamDbTypeMask
+                      param_const={CORE_DB_TYPE_MASK}
                       params_ref={params_ref}
                       defpar_ref={defpar_ref}
                       dummy_state={dummy_state}
@@ -909,13 +938,25 @@ function App() {
                     dummy_state={dummy_state}
                   />
                   <ParamI32
-                    param_const={NET_RECONNECTION_SPACING}
+                    param_const={NET_RECONNECTION_SPACING_STATIC}
                     params_ref={params_ref}
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}
                   />
                   <ParamI32
-                    param_const={NET_MAIN_PROBE_TIMEOUT}
+                    param_const={NET_RECONNECTION_SPACING_MOTION}
+                    params_ref={params_ref}
+                    defpar_ref={defpar_ref}
+                    dummy_state={dummy_state}
+                  />
+                  <ParamI32
+                    param_const={NET_MAIN_PROBE_TIMEOUT_STATIC}
+                    params_ref={params_ref}
+                    defpar_ref={defpar_ref}
+                    dummy_state={dummy_state}
+                  />
+                  <ParamI32
+                    param_const={NET_MAIN_PROBE_TIMEOUT_MOTION}
                     params_ref={params_ref}
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}
@@ -935,19 +976,31 @@ function App() {
                     dummy_state={dummy_state}
                   />
                   <ParamI32
-                    param_const={LORAWAN_DL_TRIGGER_PERIOD}
+                    param_const={LORAWAN_HEARTBEAT_PERIOD}
                     params_ref={params_ref}
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}
                   />
                   <ParamI32
-                    param_const={LORAWAN_PROBE_MAX_ATTEMPTS}
+                    param_const={LORAWAN_PROBE_MAX_ATTEMPTS_STATIC}
                     params_ref={params_ref}
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}
                   />
                   <ParamI32
-                    param_const={LORAWAN_PROBE_PERIOD}
+                    param_const={LORAWAN_PROBE_MAX_ATTEMPTS_MOTION}
+                    params_ref={params_ref}
+                    defpar_ref={defpar_ref}
+                    dummy_state={dummy_state}
+                  />
+                  <ParamI32
+                    param_const={LORAWAN_PROBE_PERIOD_STATIC}
+                    params_ref={params_ref}
+                    defpar_ref={defpar_ref}
+                    dummy_state={dummy_state}
+                  />
+                  <ParamI32
+                    param_const={LORAWAN_PROBE_PERIOD_MOTION}
                     params_ref={params_ref}
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}
@@ -1136,6 +1189,25 @@ function App() {
                   />
                   <ParamI32
                     param_const={CELL_S1_TX_AGGR_TIME}
+                    params_ref={params_ref}
+                    defpar_ref={defpar_ref}
+                    dummy_state={dummy_state}
+                  />
+
+                  <ParamString
+                    param_const={CELL_APN_USER_ID}
+                    params_ref={params_ref}
+                    defpar_ref={defpar_ref}
+                    dummy_state={dummy_state}
+                  />
+                  <ParamString
+                    param_const={CELL_APN_USER_PWD}
+                    params_ref={params_ref}
+                    defpar_ref={defpar_ref}
+                    dummy_state={dummy_state}
+                  />
+                  <ParamOptions
+                    param_const={CELL_APN_AUTH_PROTOCOL}
                     params_ref={params_ref}
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}
