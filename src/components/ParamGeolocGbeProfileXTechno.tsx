@@ -205,37 +205,44 @@ export function ParamGeolocGbeProfileXTechno({
                 },
               )}
             </Select>
-            <Checkbox
-              className="ml-3"
-              id={param_const.name + "_" + key}
-              name={key.toString()}
-              checked={state[key].always_triggered}
-              onChange={handle_checkbox_change}
-            />
-            <Tooltip
-              content={
-                "When checked, then the next technology is always triggered regardless of the success of this one."
-              }
-              trigger="click"
-            >
-              <svg
-                className="mb-1 ml-1 h-4 w-4 text-gray-800 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+
+            {key !== 0 ? (
+              <>
+                <Checkbox
+                  className="ml-3"
+                  id={param_const.name + "_" + key}
+                  name={key.toString()}
+                  checked={state[key].always_triggered}
+                  onChange={handle_checkbox_change}
                 />
-              </svg>
-            </Tooltip>
+                <Tooltip
+                  content={
+                    "When checked, this technology will be used even if a higher-priority technology has already succeeded. If unchecked, it will be skipped if any preceding technology has succeeded."
+                  }
+                  trigger="click"
+                >
+                  <svg
+                    className="mb-1 ml-1 h-4 w-4 text-gray-800 dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                </Tooltip>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         );
       })}

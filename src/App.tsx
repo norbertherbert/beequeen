@@ -576,7 +576,7 @@ function App() {
 
                 <div className="m-7 grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                   <h3 className="col-span-full text-lg font-bold text-cyan-600">
-                    GNSS parameters
+                    GNSS Scan Parameters
                   </h3>
 
                   <ParamOptions
@@ -585,10 +585,6 @@ function App() {
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}
                   />
-
-                  <h3 className="col-span-full text-lg font-bold text-cyan-600">
-                    WiFi Scan parameters
-                  </h3>
 
                   <ParamOptions
                     param_const={LR_SCAN_MODE}
@@ -608,6 +604,11 @@ function App() {
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}
                   />
+
+                  <h3 className="col-span-full text-lg font-bold text-cyan-600">
+                    WiFi Scan Parameters
+                  </h3>
+
                   <ParamI32
                     param_const={LR_WIFI_REPORT_NB_BSSID}
                     params_ref={params_ref}
