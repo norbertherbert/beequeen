@@ -116,7 +116,7 @@ export function ParamGeolocProfileXTriggers({
 
   const param_ids = `0x${param_const.id.toString(16).padStart(4, "0")} \u2013 ${param_const.name}`;
   const encoded_param_values = `${param_str.current} ${err_str.current === "" ? `\u00a0(${u32_str.current})` : ""}`;
-  const downlink_payload = `${1000}${param_const.id.toString(16).padStart(4, "0")}${((4 << 3) | 1).toString(16).padStart(2, "0")}${u32_str.current.slice(2)}`;
+  const downlink_payload = `1000${param_const.id.toString(16).padStart(4, "0")}${((4 << 3) | 1).toString(16).padStart(2, "0")}${u32_str.current.slice(2)}`;
 
   let defpar = "";
   if (defpar_ref.current !== undefined) {

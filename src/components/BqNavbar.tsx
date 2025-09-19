@@ -19,6 +19,7 @@ import {
   // open_template_config_file,
   save_config_file,
   export_as_production_config_file,
+  export_as_lora_wan_dl_file,
 } from "../open-config";
 
 export function BqNavbar({
@@ -107,6 +108,16 @@ export function BqNavbar({
     await export_as_production_config_file(params_ref.current, true);
   }
 
+  async function handle_export_as_lwdl_click() {
+    if (Object.keys(params_ref.current).length === 0) return;
+    await export_as_lora_wan_dl_file(params_ref.current, false);
+  }
+
+  async function handle_export_as_delta_lwdl_click() {
+    if (Object.keys(params_ref.current).length === 0) return;
+    await export_as_lora_wan_dl_file(params_ref.current, true);
+  }
+
   function handle_close_clock() {
     params_ref.current = {};
     set_config_file_name("");
@@ -132,7 +143,7 @@ export function BqNavbar({
               alt="Beequeen Icon"
             />
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              Beequeen - AT3
+              BeeQueen - <i>for AT3 Fw v1.3</i>
             </span>
             <span className="self-center pt-1 pl-10 font-mono whitespace-nowrap dark:text-white">
               {config_file_name}
@@ -273,6 +284,47 @@ export function BqNavbar({
                   Export as delta prod cfg...
                 </DropdownItem>
 
+                <DropdownItem onClick={handle_export_as_lwdl_click}>
+                  <svg
+                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 11v5m0 0 2-2m-2 2-2-2M3 6v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Zm2 2v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8H5Z"
+                    />
+                  </svg>
+                  Export as LoRaWAN DL...
+                </DropdownItem>
+                <DropdownItem onClick={handle_export_as_delta_lwdl_click}>
+                  <svg
+                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 11v5m0 0 2-2m-2 2-2-2M3 6v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Zm2 2v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8H5Z"
+                    />
+                  </svg>
+                  Export as delta LoRaWAN DL...
+                </DropdownItem>
+
                 <DropdownItem onClick={handle_close_clock}>
                   <svg
                     className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
@@ -320,7 +372,7 @@ export function BqNavbar({
                     set_modal_text({
                       title: "About Beequeen",
                       content:
-                        "Beequeen v0.0.1 (alpha) - Abeeway Configuration Editor Tool for Asset Tracker v3 firmware (AT3)",
+                        "BeeQueen AT3v1.3 - Abeeway Configuration Editor Tool for Asset Tracker v3 firmware v1.3",
                     });
                     set_show_modal(true);
                   }}

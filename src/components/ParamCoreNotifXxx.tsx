@@ -121,7 +121,7 @@ export function ParamCoreNotifXxx({
 
   const param_ids = `0x${param_const.id.toString(16).padStart(4, "0")} \u2013 ${param_const.name}`;
   const encoded_param_values = param_str.current;
-  const downlink_payload = `${1000}${param_const.id.toString(16).padStart(4, "0")}${((param_const.len << 3) | 4).toString(16).padStart(2, "0")}${param_str.current.replace(/,|{|}|/g, "")}`;
+  const downlink_payload = `1000${param_const.id.toString(16).padStart(4, "0")}${((param_const.len << 3) | 4).toString(16).padStart(2, "0")}${param_str.current.replace(/,|{|}|/g, "")}`;
 
   let defpar = "";
   if (defpar_ref.current !== undefined) {

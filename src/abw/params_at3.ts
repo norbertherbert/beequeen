@@ -1787,7 +1787,7 @@ export const CORE_BUTTON1_MAP: Param_core_buttonX_map = {
   name: "core_button1_map",
   title: "Button 1 mapping",
   desc: "Button 1 mapping",
-  type: "bitmap_options",
+  type: "i32_bitmap_options",
   // default_encoded_val: 896,
 
   default_val: {
@@ -1805,7 +1805,7 @@ export const CORE_BUTTON2_MAP: Param_core_buttonX_map = {
   name: "core_button2_map",
   title: "Button 2 mapping",
   desc: "Button 2 mapping",
-  type: "bitmap_options",
+  type: "i32_bitmap_options",
   // default_encoded_val: 0,
 
   default_val: {
@@ -1823,7 +1823,7 @@ export const CORE_BUTTONS_TIMING: Param_core_buttons_timing = {
   name: "core_buttons_timing",
   title: "Button timers",
   desc: "Button timers",
-  type: "bitmap_options",
+  type: "i32_bitmap_options",
   // default_encoded_val: 1973843,
 
   default_val: {
@@ -2186,7 +2186,7 @@ export const GEOLOC_GNSS_HOLD_ON_MODE: Param_options = {
   name: "geoloc_gnss_hold_on_mode",
   title: "When is the GNSS-Hold-On timout active?",
   desc: "Describes when the GNSS-Hold-On timout applicable is",
-  type: "options",
+  type: "i32_options",
   options: {
     never: { desc: "Never", val: 0 },
     always: { desc: "Always", val: 1 },
@@ -2218,7 +2218,7 @@ export const GEOLOC_PROFILE0_TRIGGERS: Param_geoloc_profileX_triggers = {
   name: "geoloc_profile0_triggers",
   title: "Trigggers",
   desc: "Events triggering Geoloc profile #0",
-  type: "bitmap_options",
+  type: "i32_bitmap_options",
   // default_encoded_val: 0x3D,
 
   default_val: {
@@ -2240,7 +2240,7 @@ export const GEOLOC_PROFILE1_TRIGGERS: Param_geoloc_profileX_triggers = {
   name: "geoloc_profile1_triggers",
   title: "Triggers",
   desc: "Events triggering Geoloc profile #1",
-  type: "bitmap_options",
+  type: "i32_bitmap_options",
   // default_encoded_val: 0,
 
   default_val: {
@@ -2262,7 +2262,7 @@ export const GEOLOC_PROFILE2_TRIGGERS: Param_geoloc_profileX_triggers = {
   name: "geoloc_profile2_triggers",
   title: "Triggers",
   desc: "Events triggering Geoloc profile #2",
-  type: "bitmap_options",
+  type: "i32_bitmap_options",
   // default_encoded_val: 0,
 
   default_val: {
@@ -2399,7 +2399,7 @@ export const GNSS_CONSTELLATION: Param_options = {
   name: "gnss_constellation",
   title: "Selected GNSS Constellations",
   desc: "Selected GNSS Constellations",
-  type: "options",
+  type: "i32_options",
   options: {
     gps: { desc: "GPS", val: 0 },
     glonass: { desc: "GLONASS", val: 1 },
@@ -2541,7 +2541,7 @@ export const LR_CONSTELLATION: Param_options = {
   name: "lr_constellation",
   title: "Selected GNSS Constellations",
   desc: "Selected GNSS Constellations",
-  type: "options",
+  type: "i32_options",
   options: {
     gps_only: { desc: "GPS only", val: 0 },
     beidou_only: { desc: "BEIDOU only", val: 5 },
@@ -2555,7 +2555,7 @@ export const LR_SCAN_MODE: Param_options = {
   name: "lr_scan_mode",
   title: "Scan mode",
   desc: "LR1100 GNSS mode (NAV1 / NAV2)",
-  type: "options",
+  type: "i32_options",
   options: {
     nav1_scan: { desc: "NAV1 scan", val: 1 },
     nav2_scan: { desc: "NAV2 scan", val: 2 },
@@ -2628,7 +2628,7 @@ export const LR_WIFI_BSSID_MAC_TYPE: Param_options = {
   name: "lr_wifi_bssid_mac_type",
   title: "BSSID type",
   desc: "MAC administration type of the WiFi BSSID to report.",
-  type: "options",
+  type: "i32_options",
   options: {
     not_configured: { desc: "All types", val: 0 },
     melody1_off: { desc: "Universally administered", val: 1 },
@@ -2682,7 +2682,7 @@ export const BLE_SCAN1_TYPE: Param_options = {
   name: "ble_scan1_type",
   title: "Scan type",
   desc: "Type of beacons to scan",
-  type: "options",
+  type: "i32_options",
   options: {
     all_beacons: { desc: "All beacons.", val: 0 },
     eddystone_uuid_beacons_only: {
@@ -2819,7 +2819,7 @@ export const BLE_SCAN1_REPORT_TYPE: Param_options = {
   name: "ble_scan1_report_type",
   title: "Scan report type",
   desc: "Scan report type",
-  type: "options",
+  type: "i32_options",
   options: {
     mac_address: { desc: "MAC address", val: 0 },
     beacon_id_short_2_bytes: { desc: "Beacon ID - short (2 bytes)", val: 1 },
@@ -2885,7 +2885,7 @@ export const BLE_SCAN2_TYPE: Param_options = {
   name: "ble_scan2_type",
   title: "Scan type",
   desc: "Type of beacons to scan",
-  type: "options",
+  type: "i32_options",
   options: {
     all_beacons: { desc: "All beacons.", val: 0 },
     eddystone_uuid_beacons_only: {
@@ -3022,7 +3022,7 @@ export const BLE_SCAN2_REPORT_TYPE: Param_options = {
   name: "ble_scan2_report_type",
   title: "Scan report type",
   desc: "Scan report type",
-  type: "options",
+  type: "i32_options",
   options: {
     mac_address: { desc: "MAC address", val: 0 },
     beacon_id_short_2_bytes: { desc: "Beacon ID - short (2 bytes)", val: 1 },
@@ -3076,7 +3076,7 @@ export const ACCELERO_FULL_SCALE: Param_options = {
   name: "accelero_full_scale",
   title: "Full scale",
   desc: "Full scale of acceleration measurements",
-  type: "options",
+  type: "i32_options",
   options: {
     _2g: { desc: "2g", val: 0 },
     _4g: { desc: "4g", val: 1 },
@@ -3091,7 +3091,7 @@ export const ACCELERO_OUTPUT_DATA_RATE: Param_options = {
   name: "accelero_output_data_rate",
   title: "Output Data Rate",
   desc: "The Output Data Rate of acceleration measurements",
-  type: "options",
+  type: "i32_options",
   options: {
     _12_5_hz: { desc: "12.5 Hz", val: 0 },
     _25_hz: { desc: "25 Hz", val: 1 },
@@ -3123,7 +3123,7 @@ export const NET_SELECTION: Param_options = {
   name: "net_selection",
   title: "Network selection order",
   desc: "Network selection order",
-  type: "options",
+  type: "i32_options",
   options: {
     lora: { desc: "LoRa", val: 0 },
     cellular: { desc: "Cellular", val: 1 },
@@ -3295,7 +3295,7 @@ export const LORAWAN_S1_TX_STRATEGY: Param_lorawan_s1_tx_strategy = {
   name: "lorawan_s1_tx_strategy",
   title: "LoRaWAN Transmit Strategy",
   desc: "LoRaWAN Transmit Strategy",
-  type: "bitmap_options",
+  type: "i32_bitmap_options",
   // default_encoded_val: 473102, 0x7380e
   default_val: {
     adr_enabled: false,
@@ -3384,7 +3384,7 @@ export const CELL_SIM_INTERFACE: Param_options = {
   name: "cell_sim_interface",
   title: "SIM Interface",
   desc: "SIM Interface",
-  type: "options",
+  type: "i32_options",
   options: {
     sim0: { desc: "SIM0", val: 0 },
     sim1_esim: { desc: "SIM1 (eSIM)", val: 1 },
@@ -3399,7 +3399,7 @@ export const CELL_NETWORK_TYPE: Param_options = {
   name: "cell_network_type",
   title: "Cellular Network Type",
   desc: "Cellular Network Type",
-  type: "options",
+  type: "i32_options",
   options: {
     cellular_not_used: { desc: "Cellular not used", val: 0 },
     lte_m: { desc: "LTE-M", val: 1 },
@@ -3501,7 +3501,7 @@ export const CELL_LOW_POWER_MODE: Param_options = {
   name: "cell_low_power_mode",
   title: "Low Power Mode",
   desc: "Low Power Mode",
-  type: "options",
+  type: "i32_options",
   options: {
     disabled: { desc: "Disabled", val: 0 },
     psm: { desc: "PSM", val: 1 },
@@ -3516,7 +3516,7 @@ export const CELL_PSM_TAU_PERIOD: Param_cell_psm_time_XXX = {
   name: "cell_psm_tau_period",
   title: "PSM TAU period",
   desc: "PSM TAU period (Only if Low Power mode is PSM)",
-  type: "i32_options",
+  type: "i32_num_with_options",
   time_units: CELL_PSM_TAU_PERIOD_TIME_UNITS,
   // default_encoded_val: 254,
   default_val: {
@@ -3530,7 +3530,7 @@ export const CELL_PSM_ACTIVE_TIME: Param_cell_psm_time_XXX = {
   name: "cell_psm_active_time",
   title: "PSM active period",
   desc: "PSM active period (Only if Low Power mode is PSM)",
-  type: "i32_options",
+  type: "i32_num_with_options",
   time_units: CELL_PSM_ACTIVE_TIME_UNITS,
   // default_encoded_val: 2,
   default_val: {
@@ -3604,7 +3604,7 @@ export const CELL_S1_TRANSPORT_PROTO: Param_options = {
   name: "cell_s1_transport_proto",
   title: "Transport Protocol",
   desc: "Transport Protocol",
-  type: "options",
+  type: "i32_options",
   options: {
     tcp: { desc: "TCP", val: 0 },
     udp: { desc: "UDP", val: 1 },
@@ -3692,7 +3692,7 @@ export const CELL_APN_AUTH_PROTOCOL: Param_options = {
   name: "cell_apn_auth_protocol",
   title: "Authentication protocol",
   desc: "Authentication protocol used for private APN connection: 1 - PAP, 2 - CHAP",
-  type: "options",
+  type: "i32_options",
   options: {
     tcp: { desc: "PAP", val: 1 },
     udp: { desc: "CHAP", val: 2 },
@@ -3709,7 +3709,7 @@ export const BLE_CNX_TX_POWER: Param_options = {
   name: "ble_cnx_tx_power",
   title: "TX Power",
   desc: "BLE connection TX Power",
-  type: "options",
+  type: "i32_options",
   options: {
     N40_00: { desc: "-40", val: 0 },
     N20_85: { desc: "-20.85", val: 1 },
@@ -3764,7 +3764,7 @@ export const BLE_CNX_BEHAVIOR: Param_options = {
   name: "ble_cnx_behavior",
   title: "Passkey and SlowAdv behavior",
   desc: "BLE connection Passkey and Slow Advertisement behavior",
-  type: "options",
+  type: "i32_options",
   options: {
     disabled: { desc: "Disabled", val: 0 },
     enabled_no_passkey: { desc: "Enabled - No passkey", val: 1 },
@@ -3798,7 +3798,7 @@ export const BLE_BEACON_TYPE: Param_options = {
   name: "ble_beacon_type",
   title: "Beaconing Type",
   desc: "Beaconing Type",
-  type: "options",
+  type: "i32_options",
   options: {
     beaconing_is_disabled: { desc: "Beaconing is Disabled", val: 0 },
     eddystone_uid: { desc: "Eddystone UID", val: 1 },

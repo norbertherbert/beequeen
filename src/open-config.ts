@@ -61,9 +61,9 @@ function parse_config_file(contents: string): Record<string, string | null> {
 
     switch (foundParam.type) {
       case "i32":
-      case "options":
-      case "bitmap_options":
       case "i32_options":
+      case "i32_bitmap_options":
+      case "i32_num_with_options": // Param_cell_psm_time_XXX
         break;
 
       case "string":
@@ -162,9 +162,9 @@ export async function save_config_file(
       if (foundParam !== undefined) {
         switch (foundParam.type) {
           case "i32":
-          case "options":
-          case "bitmap_options":
           case "i32_options":
+          case "i32_bitmap_options":
+          case "i32_num_with_options": // Param_cell_psm_time_XXX
             return `${key} = ${val}`;
 
           case "string":
@@ -247,9 +247,9 @@ export async function export_as_production_config_file(
 
         switch (foundParam.type) {
           case "i32":
-          case "options":
-          case "bitmap_options":
           case "i32_options":
+          case "i32_bitmap_options":
+          case "i32_num_with_options": // Param_cell_psm_time_XXX
           case "bytearray":
           case "bytearray_options":
           case "bytearray_bitmap":
@@ -278,6 +278,115 @@ export async function export_as_production_config_file(
     suggestedName: deltaConfig
       ? `AT3_${dateString}_delta.conf`
       : `AT3_${dateString}.conf`,
+    types: [
+      {
+        description: "Abeeway Production Configuration File",
+        accept: {
+          "text/plain": [".conf"],
+        },
+      },
+    ],
+  };
+
+  const fileHandle = await window.showSaveFilePicker(pickerOptions);
+  const fileName = (await fileHandle.getFile()).name;
+  const writableFileStream = await fileHandle.createWritable();
+  await writableFileStream.write(cfg_file_blob);
+  await writableFileStream.close();
+
+  return fileName;
+}
+
+import {
+  parse_txt_as_i32,
+  bytes_to_hex,
+  Param_bytearray,
+} from "./abw/params_at3";
+
+export async function export_as_lora_wan_dl_file(
+  config_params: Record<string, string | null>,
+  deltaConfig: boolean,
+): Promise<string> {
+  let cfg_file_entries = Object.entries(config_params);
+
+  if (deltaConfig) {
+    cfg_file_entries = cfg_file_entries.filter(
+      ([key, val]: [string, string | null]) =>
+        default_conf_params[key]?.toString().toLowerCase() !==
+        val?.toLowerCase(),
+    );
+  }
+
+  if (cfg_file_entries.length == 0) return "";
+
+  const cfg_file_str = cfg_file_entries
+    .filter(([, val]: [string, string | null]) => val !== null)
+    .map(([key, val]: [string, string | null]) => {
+      const foundParam = Object.values(PARAMS_AT3).find(
+        (param) => param.name == key,
+      );
+
+      if (foundParam !== undefined && val !== null) {
+        try {
+          const payload_prefix = `1000${foundParam.id.toString(16).padStart(4, "0")}`;
+          switch (foundParam.type) {
+            case "i32":
+            case "i32_options":
+            case "i32_bitmap_options":
+            case "i32_num_with_options": {
+              const payload_desc = ((4 << 3) | 1) // i32
+                .toString(16)
+                .padStart(2, "0");
+              const u32_hex = parse_txt_as_i32(val).u32_hex;
+              return `${payload_prefix}${payload_desc}${u32_hex.slice(2)}`;
+            }
+            case "bytearray":
+            case "bytearray_options":
+            case "bytearray_bitmap":
+            case "bytearray_beacon_id":
+            case "bytearray_search_bands": {
+              const payload_desc = (
+                ((foundParam as Param_bytearray).len << 3) |
+                4
+              ) // bytearray
+                .toString(16)
+                .padStart(2, "0");
+              return `${payload_prefix}${payload_desc}${val.replace(/,|{|}|/g, "")}`;
+            }
+            case "string": {
+              const payload_desc = ((val.length << 3) | 3) // string
+                .toString(16)
+                .padStart(2, "0");
+              const utf8Encode = new TextEncoder();
+              const hex_encoded_str = bytes_to_hex(
+                [...utf8Encode.encode(val)],
+                val.length,
+              );
+              return `${payload_prefix}${payload_desc}${hex_encoded_str}`;
+            }
+            default:
+              throw new Error(`invalid parameter type: '${foundParam.type}`);
+          }
+        } catch (err) {
+          throw new Error(
+            `error while generating LoRaWAN DL payload for parameter '${foundParam.name}' ${err}`,
+          );
+        }
+      } else {
+        return "";
+      }
+    })
+    .reduce(
+      (cfg_file_str, cfg_file_line) => cfg_file_str + cfg_file_line + "\n",
+      "",
+    );
+
+  const cfg_file_blob = new Blob([cfg_file_str], { type: "text/plain" });
+  const dateString = new Date().toISOString().slice(0, 16);
+  const pickerOptions: SaveFilePickerOptions = {
+    suggestedName: deltaConfig
+      ? `AT3_LWDL_${dateString}_delta.txt`
+      : `AT3_LWDL_${dateString}.txt`,
     types: [
       {
         description: "Abeeway Production Configuration File",
