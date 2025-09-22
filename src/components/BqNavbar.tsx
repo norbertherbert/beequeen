@@ -132,7 +132,7 @@ export function BqNavbar({
               alt="Beequeen Icon"
             />
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              Beequeen - AT3
+              BeeQueen - <i>for AT3 Fw v1.2</i>
             </span>
             <span className="self-center pt-1 pl-10 font-mono whitespace-nowrap dark:text-white">
               {config_file_name}
