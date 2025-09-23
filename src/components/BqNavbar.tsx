@@ -36,26 +36,6 @@ export function BqNavbar({
   const [show_modal, set_show_modal] = useState(false);
   const [modal_text, set_modal_text] = useState({ title: "", content: "" });
 
-  const [beehive_tab, set_beehive_tab] = useState<Window | null>(null);
-  const open_beehive_tab_if_not_opened = () => {
-    if (window.opener !== null && window.opener.name === "beehive") {
-      // window.opener.focus()
-      alert(
-        "Beehive is the parent of this window. Please switch back manually using your mouse!",
-      );
-    } else {
-      if (!beehive_tab || beehive_tab.closed) {
-        const new_beehive_tab = window.open(
-          "https://nano-things.net/beehive/",
-          "beehive",
-        );
-        set_beehive_tab(new_beehive_tab);
-      } else {
-        beehive_tab.focus();
-      }
-    }
-  };
-
   async function handle_new_from_template_click() {
     if (defpar_ref === undefined) {
       return;
@@ -122,22 +102,52 @@ export function BqNavbar({
     <>
       <div className="sticky top-0 z-10 bg-white shadow-md dark:bg-black">
         <Navbar fluid rounded>
-          <NavbarBrand
-            href="https://docs.thingpark.com/thingpark-location/abeeway-trackers-reference-guide/AbeewayRefGuideAT3_v1.0/configuration"
-            target="_blank"
-          >
-            <img
-              src={beequeen_icon}
-              className="logo mr-3 h-8 sm:h-12"
-              alt="Beequeen Icon"
-            />
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              BeeQueen - <i>for AT3 Fw v1.2</i>
+          <div className="flex items-center">
+            <NavbarBrand
+              href="https://docs.thingpark.com/thingpark-location/abeeway-trackers-reference-guide/AbeewayRefGuideAT3_v1.0/configuration"
+              target="_blank"
+            >
+              <img
+                src={beequeen_icon}
+                className="logo mr-3 h-8 sm:h-12"
+                alt="Beequeen Icon"
+              />
+              <span className="mr-1 self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+                BeeQueen
+              </span>
+            </NavbarBrand>
+
+            <span className="text-base font-normal whitespace-nowrap dark:text-white">
+              - for
             </span>
-            <span className="self-center pt-1 pl-10 font-mono whitespace-nowrap dark:text-white">
+
+            <select
+              id="version-select"
+              className="ml-2 rounded border px-2 py-1 text-sm dark:bg-gray-800 dark:text-white"
+              defaultValue="https://nano-things.net/beequeen/AT3v1.2/"
+              onChange={(e) => {
+                const url = e.target.value;
+                if (url) {
+                  window.location.href = url;
+                }
+              }}
+            >
+              <option value="https://nano-things.net/beequeen/AT3v1.3/">
+                AT3 Fw v1.3
+              </option>
+              <option value="https://nano-things.net/beequeen/AT3v1.2/">
+                AT3 Fw v1.2
+              </option>
+              <option value="https://nano-things.net/beequeen/AT2v2.6/">
+                AT2 Fw v2.6
+              </option>
+            </select>
+
+            <span className="ml-10 font-mono whitespace-nowrap dark:text-white">
               {config_file_name}
             </span>
-          </NavbarBrand>
+          </div>
+
           <NavbarToggle />
           <NavbarCollapse>
             <div className="pt-2 pl-3 md:pt-0 dark:text-white">
@@ -331,9 +341,8 @@ export function BqNavbar({
             </div>
 
             <NavbarLink
-              // href="https://nano-things.net/beehive/" target="_blank"
-              href="#"
-              onClick={open_beehive_tab_if_not_opened}
+              href="https://nano-things.net/beehive/AT3v1.2"
+              target="_blank"
             >
               <img
                 src={beehive_icon}
