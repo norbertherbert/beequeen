@@ -667,6 +667,7 @@ export const BUTTON_ACTIONS: Option_vals = {
     desc: "Start BLE advertising for connectivity",
     val: 8,
   },
+  device_reset: { desc: "Device reset", val: 9 },
   // rfu: {desc: "RFU", val: 0},
 };
 
@@ -3222,7 +3223,7 @@ export const LORAWAN_PROBE_MAX_ATTEMPTS_STATIC: Param_i32 = {
   desc: "Number of link-check requests sent before declaring the network as lost",
   type: "i32",
   min_val: 0,
-  max_val: 10,
+  max_val: 20,
   default_val: 4,
   unit: "",
 };
@@ -3370,7 +3371,7 @@ export const LORAWAN_PROBE_MAX_ATTEMPTS_MOTION: Param_i32 = {
   desc: "Number of link-check requests sent before declaring the network as lost",
   type: "i32",
   min_val: 0,
-  max_val: 10,
+  max_val: 20,
   default_val: 4,
   unit: "",
 };
