@@ -198,13 +198,13 @@ function App() {
         defpar_ref={defpar_ref}
         set_dummy_state={set_dummy_state}
       />
-
+      {/* eslint-disable-next-line react-hooks/refs */}
       {Object.keys(params_ref.current).length === 0 && (
         <div className="p-5 dark:bg-black dark:text-white">
           Please open a new file or start with a new default configuration!
         </div>
       )}
-
+      {/* eslint-disable-next-line react-hooks/refs */}
       {Object.keys(params_ref.current).length !== 0 &&
         defpar_ref !== undefined && (
           <div className="dark:bg-black">

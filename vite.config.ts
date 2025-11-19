@@ -4,8 +4,10 @@ import flowbiteReact from "flowbite-react/plugin/vite";
 import { defineConfig } from "vite";
 // import { visualizer } from "rollup-plugin-visualizer";
 
+import { FW_VERSION } from "./version";
+
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     react(),
     tailwindcss(),
@@ -17,13 +19,13 @@ export default defineConfig({
     //   brotliSize: true,
     // }),
   ],
-  base: "",
   root: "./",
+  publicDir: command === "serve" ? "public-dev" : "public",
+  base: command === "serve" ? "/" : `/beequeen/${FW_VERSION}/`,
   build: {
     copyPublicDir: true,
     outDir: "./dist",
     emptyOutDir: true,
-
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -40,4 +42,9 @@ export default defineConfig({
       },
     },
   },
-});
+
+  // expose the version as a global constant in the bundled app
+  define: {
+    __FW_VERSION__: JSON.stringify(FW_VERSION),
+  },
+}));

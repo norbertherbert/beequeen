@@ -1,3 +1,4 @@
+import type React from "react";
 import { useState } from "react";
 import beequeen_icon from "../assets/beequeen.png";
 import beehive_icon from "../assets/beehive.png";
@@ -21,6 +22,8 @@ import {
   export_as_production_config_file,
   export_as_lora_wan_dl_file,
 } from "../open-config";
+import { VersionSelect } from "./VersionSelect";
+import { FW_VERSION } from "../../version";
 
 export function BqNavbar({
   params_ref,
@@ -38,35 +41,47 @@ export function BqNavbar({
   const [modal_text, set_modal_text] = useState({ title: "", content: "" });
 
   async function handle_new_from_template_click() {
-    if (defpar_ref === undefined) {
+    if (!defpar_ref.current) {
       return;
     }
 
+    // eslint-disable-next-line react-hooks/immutability
     params_ref.current = { ...defpar_ref.current };
     set_dummy_state((x) => x + 1);
     set_config_file_name("!! new unsaved config !!");
   }
 
   async function handle_open_click() {
-    if (defpar_ref === undefined) {
+    if (!defpar_ref.current) {
       return;
     }
 
     const { file_name, config_params } = await open_config_file();
+    // eslint-disable-next-line react-hooks/immutability
     params_ref.current = config_params;
     set_dummy_state((x) => x + 1);
     set_config_file_name(file_name);
   }
 
   async function handle_save_as_click() {
-    if (Object.keys(params_ref.current).length === 0) return;
-    const file_name = await save_config_file(params_ref.current, false);
+    // if (Object.keys(params_ref.current).length === 0) return;
+    // const file_name = await save_config_file(params_ref.current, false);
+
+    const current = params_ref.current;
+    if (!current || Object.keys(current).length === 0) return;
+    const file_name = await save_config_file(current, false);
+
     set_config_file_name(file_name);
   }
 
   async function handle_save_as_delta_click() {
-    if (Object.keys(params_ref.current).length === 0) return;
-    const file_name = await save_config_file(params_ref.current, true);
+    // if (Object.keys(params_ref.current).length === 0) return;
+    // const file_name = await save_config_file(params_ref.current, true);
+
+    const current = params_ref.current;
+    if (!current || Object.keys(current).length === 0) return;
+    const file_name = await save_config_file(current, true);
+
     if (file_name === "") {
       set_modal_text({
         title: "Alert!",
@@ -79,26 +94,43 @@ export function BqNavbar({
   }
 
   async function handle_export_as_prod_cfg_click() {
-    if (Object.keys(params_ref.current).length === 0) return;
-    await export_as_production_config_file(params_ref.current, false);
+    // if (Object.keys(params_ref.current).length === 0) return;
+    // await export_as_production_config_file(params_ref.current, false);
+
+    const current = params_ref.current;
+    if (!current || Object.keys(current).length === 0) return;
+    await export_as_production_config_file(current, false);
   }
 
   async function handle_export_as_delta_prod_cfg_click() {
-    if (Object.keys(params_ref.current).length === 0) return;
-    await export_as_production_config_file(params_ref.current, true);
+    // if (Object.keys(params_ref.current).length === 0) return;
+    // await export_as_production_config_file(params_ref.current, true);
+
+    const current = params_ref.current;
+    if (!current || Object.keys(current).length === 0) return;
+    await export_as_production_config_file(current, true);
   }
 
   async function handle_export_as_lwdl_click() {
-    if (Object.keys(params_ref.current).length === 0) return;
-    await export_as_lora_wan_dl_file(params_ref.current, false);
+    // if (Object.keys(params_ref.current).length === 0) return;
+    // await export_as_lora_wan_dl_file(params_ref.current, false);
+
+    const current = params_ref.current;
+    if (!current || Object.keys(current).length === 0) return;
+    await export_as_lora_wan_dl_file(current, false);
   }
 
   async function handle_export_as_delta_lwdl_click() {
-    if (Object.keys(params_ref.current).length === 0) return;
-    await export_as_lora_wan_dl_file(params_ref.current, true);
+    // if (Object.keys(params_ref.current).length === 0) return;
+    // await export_as_lora_wan_dl_file(params_ref.current, true);
+
+    const current = params_ref.current;
+    if (!current || Object.keys(current).length === 0) return;
+    await export_as_lora_wan_dl_file(current, true);
   }
 
-  function handle_close_clock() {
+  function handle_close_click() {
+    // eslint-disable-next-line react-hooks/immutability
     params_ref.current = {};
     set_config_file_name("");
     set_dummy_state((x) => x + 1);
@@ -115,7 +147,7 @@ export function BqNavbar({
         <Navbar fluid rounded>
           <div className="flex items-center">
             <NavbarBrand
-              href="https://docs.thingpark.com/thingpark-location/abeeway-trackers-reference-guide/AbeewayRefGuideAT3_v1.0/configuration"
+              href="https://docs.thingpark.com/thingpark-location/firmware/functioning"
               target="_blank"
             >
               <img
@@ -132,27 +164,7 @@ export function BqNavbar({
               - for
             </span>
 
-            <select
-              id="version-select"
-              className="ml-2 rounded border px-2 py-1 text-sm dark:bg-gray-800 dark:text-white"
-              defaultValue="https://nano-things.net/beequeen/AT3v1.3/"
-              onChange={(e) => {
-                const url = e.target.value;
-                if (url) {
-                  window.location.href = url;
-                }
-              }}
-            >
-              <option value="https://nano-things.net/beequeen/AT3v1.3/">
-                AT3 Fw v1.3
-              </option>
-              <option value="https://nano-things.net/beequeen/AT3v1.2/">
-                AT3 Fw v1.2
-              </option>
-              <option value="https://nano-things.net/beequeen/AT2v2.6/">
-                AT2 Fw v2.6
-              </option>
-            </select>
+            <VersionSelect currentId={FW_VERSION} />
 
             <span className="ml-10 font-mono whitespace-nowrap dark:text-white">
               {config_file_name}
@@ -165,7 +177,7 @@ export function BqNavbar({
               <Dropdown label="File" className="inline" inline>
                 <DropdownItem onClick={handle_new_from_template_click}>
                   <svg
-                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    className="mr-1 h-5 w-5 text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -184,7 +196,7 @@ export function BqNavbar({
                 </DropdownItem>
                 <DropdownItem onClick={handle_open_click}>
                   <svg
-                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    className="mr-1 h-5 w-5 text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -204,7 +216,7 @@ export function BqNavbar({
                 </DropdownItem>
                 <DropdownItem onClick={handle_save_as_click}>
                   <svg
-                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    className="mr-1 h-5 w-5 text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -229,7 +241,7 @@ export function BqNavbar({
                 </DropdownItem>
                 <DropdownItem onClick={handle_save_as_delta_click}>
                   <svg
-                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    className="mr-1 h-5 w-5 text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -255,7 +267,7 @@ export function BqNavbar({
 
                 <DropdownItem onClick={handle_export_as_prod_cfg_click}>
                   <svg
-                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    className="mr-1 h-5 w-5 text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -275,7 +287,7 @@ export function BqNavbar({
                 </DropdownItem>
                 <DropdownItem onClick={handle_export_as_delta_prod_cfg_click}>
                   <svg
-                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    className="mr-1 h-5 w-5 text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -296,7 +308,7 @@ export function BqNavbar({
 
                 <DropdownItem onClick={handle_export_as_lwdl_click}>
                   <svg
-                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    className="mr-1 h-5 w-5 text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -306,9 +318,9 @@ export function BqNavbar({
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M12 11v5m0 0 2-2m-2 2-2-2M3 6v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Zm2 2v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8H5Z"
                     />
                   </svg>
@@ -316,7 +328,7 @@ export function BqNavbar({
                 </DropdownItem>
                 <DropdownItem onClick={handle_export_as_delta_lwdl_click}>
                   <svg
-                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    className="mr-1 h-5 w-5 text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -326,18 +338,18 @@ export function BqNavbar({
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M12 11v5m0 0 2-2m-2 2-2-2M3 6v1a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Zm2 2v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8H5Z"
                     />
                   </svg>
                   Export as delta LoRaWAN DL...
                 </DropdownItem>
 
-                <DropdownItem onClick={handle_close_clock}>
+                <DropdownItem onClick={handle_close_click}>
                   <svg
-                    className="mr-1 h-[20px] w-[20px] text-gray-800 dark:text-white"
+                    className="mr-1 h-5 w-5 text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -375,14 +387,13 @@ export function BqNavbar({
                     );
                   }}
                 >
-                  AT3 Reeference Guide
+                  AT3 Reference Guide
                 </DropdownItem>
                 <DropdownItem
                   onClick={() => {
                     set_modal_text({
                       title: "About Beequeen",
-                      content:
-                        "BeeQueen AT3v1.3 - Abeeway Configuration Editor Tool for Asset Tracker v3 firmware v1.3",
+                      content: `BeeQueen ${FW_VERSION} - Abeeway Configuration Editor Tool for Asset Tracker v${FW_VERSION.substring(2, 3)} firmware ${FW_VERSION.substring(3)}`,
                     });
                     set_show_modal(true);
                   }}
@@ -393,7 +404,7 @@ export function BqNavbar({
             </div>
 
             <NavbarLink
-              href="https://nano-things.net/beehive/AT3v1.3"
+              href={`https://nano-things.net/beehive/${FW_VERSION}`}
               target="_blank"
             >
               <img
