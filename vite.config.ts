@@ -42,9 +42,4 @@ export default defineConfig(({ command }) => ({
       },
     },
   },
-
-  // expose the version as a global constant in the bundled app
-  define: {
-    __FW_VERSION__: JSON.stringify(FW_VERSION),
-  },
 }));
