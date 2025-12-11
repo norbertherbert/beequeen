@@ -153,6 +153,7 @@ import {
   CELL_APN_USER_ID,
   CELL_APN_USER_PWD,
   CELL_APN_AUTH_PROTOCOL,
+  CELL_FUOTA_SERVER_IP_URL_ADDR,
   BLE_CNX_TX_POWER,
   BLE_CNX_ADV_DURATION,
   BLE_CNX_BEHAVIOR,
@@ -1208,6 +1209,12 @@ function App() {
                   />
                   <ParamOptions
                     param_const={CELL_APN_AUTH_PROTOCOL}
+                    params_ref={params_ref}
+                    defpar_ref={defpar_ref}
+                    dummy_state={dummy_state}
+                  />
+                  <ParamString
+                    param_const={CELL_FUOTA_SERVER_IP_URL_ADDR}
                     params_ref={params_ref}
                     defpar_ref={defpar_ref}
                     dummy_state={dummy_state}

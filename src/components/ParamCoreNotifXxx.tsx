@@ -46,6 +46,7 @@ export function ParamCoreNotifXxx({
           sys_heartbeat: false,
           sys_shutdown: false,
           sys_data_buffering: false,
+          sys_fuota: false,
 
           sos_on: false,
           sos_off: false,

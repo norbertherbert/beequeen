@@ -138,6 +138,7 @@ export const PARAMS_AT3_INDEX: [string, number, string][] = [
   ["cell_apn_user_id", 0x0a17, "string"],
   ["cell_apn_user_pwd", 0x0a18, "string"],
   ["cell_apn_auth_protocol", 0x0a19, "i32"],
+  ["cell_fuota_server_ip_url_addr", 0x0a1a, "string"],
 
   ["ble_cnx_tx_power", 0x0b00, "i32"],
   ["ble_cnx_adv_duration", 0x0b01, "i32"],
@@ -283,6 +284,7 @@ export interface Notif_bitmap_gui_val {
   sys_heartbeat: boolean;
   sys_shutdown: boolean;
   sys_data_buffering: boolean;
+  sys_fuota: boolean;
 
   sos_on: boolean;
   sos_off: boolean;
@@ -477,8 +479,9 @@ export const NOTIFICATIONS: Option_ids = {
   sys_ble: { id: 0x0002, desc: "BLE securely connected" },
   sys_tamper: { id: 0x0003, desc: "Tamper detection" },
   sys_heartbeat: { id: 0x0004, desc: "Heartbeat message" },
-  sys_shutdown: { id: 0x0004, desc: "Shutdown" },
-  sys_data_buffering: { id: 0x0004, desc: "Data buffering" },
+  sys_shutdown: { id: 0x0005, desc: "Shutdown" },
+  sys_data_buffering: { id: 0x0006, desc: "Data buffering" },
+  sys_fuota: { id: 0x0007, desc: "FUOTA" },
 
   sos_on: { id: 0x0100, desc: "SOS activated" },
   sos_off: { id: 0x0101, desc: "SOS deactivated" },
@@ -973,6 +976,7 @@ export function encode_notif_bitmap(gui_val: Notif_bitmap_gui_val): number[] {
   param_val[0] |= gui_val.sys_heartbeat ? 1 << 4 : 0;
   param_val[0] |= gui_val.sys_shutdown ? 1 << 5 : 0;
   param_val[0] |= gui_val.sys_data_buffering ? 1 << 6 : 0;
+  param_val[0] |= gui_val.sys_fuota ? 1 << 7 : 0;
 
   param_val[1] |= gui_val.sos_on ? 1 << 0 : 0;
   param_val[1] |= gui_val.sos_off ? 1 << 1 : 0;
@@ -1011,6 +1015,7 @@ export function encode_db_type_mask_bitmap(
   param_val[1] |= gui_val.sys_heartbeat ? 1 << 4 : 0;
   param_val[1] |= gui_val.sys_shutdown ? 1 << 5 : 0;
   param_val[1] |= gui_val.sys_data_buffering ? 1 << 6 : 0;
+  param_val[1] |= gui_val.sys_fuota ? 1 << 7 : 0;
 
   param_val[2] |= gui_val.sos_on ? 1 << 0 : 0;
   param_val[2] |= gui_val.sos_off ? 1 << 1 : 0;
@@ -1046,6 +1051,7 @@ export function decode_notif_bitmap(param_val: number[]): Notif_bitmap_gui_val {
     sys_heartbeat: ((param_val[0] >>> 4) & 1) == 1,
     sys_shutdown: ((param_val[0] >>> 5) & 1) == 1,
     sys_data_buffering: ((param_val[0] >>> 6) & 1) == 1,
+    sys_fuota: ((param_val[0] >>> 7) & 1) == 1,
 
     sos_on: ((param_val[1] >>> 0) & 1) == 1,
     sos_off: ((param_val[1] >>> 1) & 1) == 1,
@@ -1724,6 +1730,7 @@ export const CORE_NOTIF_ENABLE: Param_core_notif_XXX = {
     sys_heartbeat: true,
     sys_shutdown: true,
     sys_data_buffering: false,
+    sys_fuota: false,
 
     sos_on: false,
     sos_off: false,
@@ -2083,6 +2090,7 @@ export const CORE_DB_TYPE_MASK: Param_core_db_type_mask = {
     sys_heartbeat: false,
     sys_shutdown: false,
     sys_data_buffering: false,
+    sys_fuota: false,
 
     sos_on: false,
     sos_off: false,
@@ -3056,7 +3064,7 @@ export const ACCELERO_MOTION_SENSI: Param_i32 = {
   type: "i32",
   min_val: 1,
   max_val: 96,
-  default_val: 1,
+  default_val: 8,
   unit: "31mG",
 };
 
@@ -3256,6 +3264,7 @@ export const LORAWAN_CONFIRM_NOTIF_MAP: Param_core_notif_XXX = {
     sys_heartbeat: false,
     sys_shutdown: false,
     sys_data_buffering: false,
+    sys_fuota: false,
 
     sos_on: false,
     sos_off: false,
@@ -3701,6 +3710,15 @@ export const CELL_APN_AUTH_PROTOCOL: Param_options = {
   default_val: 1,
 };
 
+export const CELL_FUOTA_SERVER_IP_URL_ADDR: Param_string = {
+  id: 0x0a1a,
+  name: "cell_fuota_server_ip_url_addr",
+  title: "Firmware Update Server",
+  desc: "Firmware Update Server URL or address",
+  type: "string",
+  default_val: "nano-things.net",
+};
+
 // -------------------------------------------------------
 // --- BLE
 // -------------------------------------------------------
@@ -4038,6 +4056,7 @@ export const PARAMS_AT3: Param_type[] = [
   CELL_APN_USER_ID,
   CELL_APN_USER_PWD,
   CELL_APN_AUTH_PROTOCOL,
+  CELL_FUOTA_SERVER_IP_URL_ADDR,
 
   BLE_CNX_TX_POWER,
   BLE_CNX_ADV_DURATION,
