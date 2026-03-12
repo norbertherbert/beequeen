@@ -3716,7 +3716,7 @@ export const CELL_FUOTA_SERVER_IP_URL_ADDR: Param_string = {
   title: "Firmware Update Server",
   desc: "Firmware Update Server URL or address",
   type: "string",
-  default_val: "nano-things.net",
+  default_val: "tools.abeeway.io",
 };
 
 // -------------------------------------------------------

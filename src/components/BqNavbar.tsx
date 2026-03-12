@@ -403,10 +403,7 @@ export function BqNavbar({
               </Dropdown>
             </div>
 
-            <NavbarLink
-              href={`https://nano-things.net/beehive/${FW_VERSION}`}
-              target="_blank"
-            >
+            <NavbarLink href={`/beehive/${FW_VERSION}`} target="_blank">
               <img
                 src={beehive_icon}
                 className="logo inline-block h-6 pr-1 pb-1"
