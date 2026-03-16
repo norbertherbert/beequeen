@@ -18,6 +18,10 @@ npm install
 npm run build
 ```
 
+## Deploy
+
+Pushes to `main` automatically build and publish the app to GitHub Pages through `.github/workflows/deploy-pages.yml`.
+
 ## Try out loccally
 
 ```bash
