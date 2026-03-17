@@ -20,7 +20,7 @@ export default defineConfig(({ command }) => ({
     // }),
   ],
   root: "./",
-  publicDir: command === "serve" ? "public-dev" : "public",
+  publicDir: "public",
   base: "/beequeen/",
   build: {
     copyPublicDir: true,
