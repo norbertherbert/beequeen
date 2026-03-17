@@ -42,25 +42,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          VERSION="$(sed -n 's/^export const FW_VERSION = "\(.*\)";/\1/p' version.ts)"
-          test -n "$VERSION"
-          mkdir -p site/"$VERSION"
-          cp -R dist/. site/"$VERSION"/
-          cp public-dev/beequeen/versions.json site/versions.json
-          cat > site/index.html <<EOF
-          <!doctype html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8" />
-              <meta http-equiv="refresh" content="0; url=./$VERSION/" />
-              <meta name="viewport" content="width=device-width, initial-scale=1" />
-              <title>BeeQueen</title>
-            </head>
-            <body>
-              <p>Redirecting to <a href="./$VERSION/">the latest BeeQueen build</a>...</p>
-            </body>
-          </html>
-          EOF
+          mkdir -p site
+          cp -R dist/. site/
           cp site/index.html site/404.html
 
       - name: Upload Pages artifact

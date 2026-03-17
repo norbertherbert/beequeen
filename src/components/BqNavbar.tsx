@@ -22,7 +22,7 @@ import {
   export_as_production_config_file,
   export_as_lora_wan_dl_file,
 } from "../open-config";
-import { VersionSelect } from "./VersionSelect";
+// import { VersionSelect } from "./VersionSelect";
 import { FW_VERSION } from "../../version";
 
 export function BqNavbar({
@@ -159,13 +159,11 @@ export function BqNavbar({
                 BeeQueen
               </span>
             </NavbarBrand>
-
             <span className="text-base font-normal whitespace-nowrap dark:text-white">
               - for
             </span>
-
-            <VersionSelect currentId={FW_VERSION} />
-
+            {/* <VersionSelect currentId={FW_VERSION} /> */}
+            &nbsp;{FW_VERSION}
             <span className="ml-10 font-mono whitespace-nowrap dark:text-white">
               {config_file_name}
             </span>
@@ -403,7 +401,8 @@ export function BqNavbar({
               </Dropdown>
             </div>
 
-            <NavbarLink href={`/beehive/${FW_VERSION}`} target="_blank">
+            {/* <NavbarLink href={`/beehive/${FW_VERSION}`} target="_blank"> */}
+            <NavbarLink href={`/beehive`} target="_blank">
               <img
                 src={beehive_icon}
                 className="logo inline-block h-6 pr-1 pb-1"
@@ -417,7 +416,11 @@ export function BqNavbar({
         </Navbar>
       </div>
 
-      <Modal show={show_modal} onClose={() => set_show_modal(false)}>
+      <Modal
+        show={show_modal}
+        dismissible
+        onClose={() => set_show_modal(false)}
+      >
         <ModalHeader>{modal_text.title}</ModalHeader>
         {/* <Modal.Header/> */}
         <ModalBody>

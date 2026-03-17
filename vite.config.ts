@@ -4,7 +4,7 @@ import flowbiteReact from "flowbite-react/plugin/vite";
 import { defineConfig } from "vite";
 // import { visualizer } from "rollup-plugin-visualizer";
 
-import { FW_VERSION } from "./version";
+// import { FW_VERSION } from "./version";
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
@@ -21,7 +21,7 @@ export default defineConfig(({ command }) => ({
   ],
   root: "./",
   publicDir: command === "serve" ? "public-dev" : "public",
-  base: command === "serve" ? "/" : `/beequeen/${FW_VERSION}/`,
+  base: "/beequeen/",
   build: {
     copyPublicDir: true,
     outDir: "./dist",
