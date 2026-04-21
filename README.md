@@ -1,3 +1,3 @@
 # Beequeen
 
-This repo has been noved to [https://github.com/beequeen](https://github.com/beequeen).
+This repo has been noved to [https://github.com/abeeway/beequeen](https://github.com/beequeen).
